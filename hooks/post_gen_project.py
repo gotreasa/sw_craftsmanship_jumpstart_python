@@ -27,7 +27,7 @@ if __name__ == "__main__":
     run_command("pipenv run tests")
 
     print("😻 git repo creation...")
-    run_command(f"gh repo create {kata_name} --private")
+    run_command(f"gh repo create {kata_name} --public")
 
     print("😻 Git initializing...")
     run_command("git init")
@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     print("😻 Git add remote...")
     run_command(
-        f"git remote add origin git@github.com:undeadgrishnackh/{kata_name}.git"
+        f"git remote add origin git@github.com:{{cookiecutter.github_username}}/{kata_name}.git"
     )
 
     print("😻 Git branch main...")
