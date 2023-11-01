@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/linux,macos,python,pycharm,windows,sonarqube,visualstudiocode,snyk
-# Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,python,pycharm,windows,sonarqube,visualstudiocode,snyk
+# Created by https://www.toptal.com/developers/gitignore/api/linux,macos,pycharm,python,snyk,sonarqube,visualstudiocode,windows
+# Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,pycharm,python,snyk,sonarqube,visualstudiocode,windows
 
 ### Linux ###
 *~
@@ -397,7 +397,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/linux,macos,python,pycharm,windows,sonarqube,visualstudiocode,snyk
+# End of https://www.toptal.com/developers/gitignore/api/linux,macos,pycharm,python,snyk,sonarqube,visualstudiocode,windows
 
 # integration tests
 *.tmp
