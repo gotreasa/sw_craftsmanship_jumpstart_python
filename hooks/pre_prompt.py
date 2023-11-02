@@ -17,6 +17,11 @@ class TestPrerequisites(unittest.TestCase):
         return_value=os.system('command -v git')
         self.assertEqual(return_value, 0, "❗️ Git CLI (git) needs to be installed")
 
+    def test_pipenv_is_installed(self):
+        """🧪 Asserting pipenv is installed"""
+        return_value=os.system('command -v pipenv')
+        self.assertEqual(return_value, 0, "❗️ pipenv needs to be installed")
+
     def test_pycharm_is_installed(self):
         """🧪 Asserting PyCharm is added to the path"""
         return_value=os.system('command -v pycharm')
