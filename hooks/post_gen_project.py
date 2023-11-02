@@ -21,6 +21,53 @@ def run_command(command):
             f"Command {command} failed with return code {completed_process.returncode}"
         )
 
+def setup_github_action_secrets():
+    print("ℹ️ Setup Github Action Secrets")
+    os.system('gh secret set PACT_BROKER_TOKEN --body "{{cookiecutter._pact_broker_token}}"')
+    os.system('gh secret set SNYK_TOKEN --body "{{cookiecutter._snyk_token}}"')
+    os.system('gh secret set SONAR_TOKEN --body "{{cookiecutter._sonar_token}}"')
+    print("👌 Completed setting up Github Action Secrets")
+
+def setup_sonar():
+    project_name="{{cookiecutter.github_username}}_{{cookiecutter.directory_name}}"
+    project_organization="{{cookiecutter.sonar_org}}"
+    project_key="{{cookiecutter.github_username}}_{{cookiecutter.directory_name}}"
+    print("ℹ️ Setting up the sonar configuration")
+
+    try:
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization" : "Bearer {{cookiecutter._sonar_token}}"
+        }
+
+        payload = {
+            "project": project_key,
+            "organization": project_organization,
+            "name": project_name,
+            "newCodeDefinitionType": "previous_version",
+            "newCodeDefinitionValue": "previous_version",
+            "mainBranch": "main"
+        }
+        data = urllib.parse.urlencode(payload)
+        data = data.encode('utf-8')
+        request = urllib.request.Request("https://sonarcloud.io/api/projects/create", data, headers, method="POST")
+        urllib.request.urlopen(request)
+
+    except urllib.error.HTTPError as error:
+            print("💥 There was an error", error)
+            sys.exit(1)
+    print("👌 Completed setting up the sonar configuration")
+
+def write_tokens_to_env_file():
+    print("ℹ️ Saving the tokens in the environment file")
+    open_file = open(".env", "a")
+    open_file.writelines([
+        "PACT_BROKER_TOKEN={{cookiecutter._pact_broker_token}}\n",
+        "SONAR_TOKEN={{cookiecutter._sonar_token}}\n", 
+        "SNYK_TOKEN={{cookiecutter._snyk_token}}\n",])
+    open_file.close()
+    print("👌 Completed saving the environment file")
+
 def open_pycharm():
     print("👩🏻‍💻 time to code!")
     run_command("pycharm .")
@@ -48,6 +95,10 @@ if __name__ == "__main__":
 
     print("😻 Git branch main...")
     run_command("git branch -M main")
+
+    setup_github_action_secrets()
+    setup_sonar()
+    write_tokens_to_env_file()
 
     print("😻 git add all the items in the repo...")
     run_command("git add --all")
@@ -86,6 +137,42 @@ class TestJumpstart(unittest.TestCase):
         """🧪 Asserting that the tests/unit/test_0_installer_runner.py is set up"""
         self.assertTrue(os.path.isfile('tests/unit/test_0_installer_runner.py'), "❗️ The test file is missing")
 
+    def test_sonar_token_was_added_to_env_file(self):
+        """🧪 Check that SONAR_TOKEN was added to the .env file"""
+        
+        with open(".env", "r") as file:
+            string='SONAR_TOKEN={{cookiecutter._sonar_token}}\n'
+            found=False
+            for line_number, line in enumerate(file):  
+                if string == line:
+                    found=True
+                    break
+            self.assertTrue(found, "❗️ The .env was not updated with SONAR_TOKEN")
+
+    def test_snyk_token_was_added_to_env_file(self):
+        """🧪 Check that SNYK_TOKEN was added to the .env file"""
+        
+        with open(".env", "r") as file:
+            string='SNYK_TOKEN={{cookiecutter._snyk_token}}\n'
+            found_snyk_token=False
+            for line_number, line in enumerate(file):  
+                if string == line:
+                    found_snyk_token=True
+                    break
+            self.assertTrue(found_snyk_token, "❗️ The .env was not updated with SNYK_TOKEN")
+
+    def test_pact_broker_token_was_added_to_env_file(self):
+        """🧪 Check that PACT_BROKER_TOKEN was added to the .env file"""
+        
+        with open(".env", "r") as file:
+            string='PACT_BROKER_TOKEN={{cookiecutter._pact_broker_token}}\n'
+            found=False
+            for line_number, line in enumerate(file):  
+                if string == line:
+                    found=True
+                    break
+            self.assertTrue(found, "❗️ The .env was not updated with PACT_BROKER_TOKEN")
+
     def test_repository_url_returns_ok(self):
         """🧪 Check that the Github repository is set up correctly"""
         try:
@@ -119,6 +206,33 @@ class TestJumpstart(unittest.TestCase):
         """🧪 Asserting that git origin has been set up"""
         result=subprocess.run('git remote show', stdout=subprocess.PIPE, shell=True, check=True)
         self.assertIn("origin", str(result.stdout), "❗️ The Git origin is not set up")
+
+    def test_sonar_cloud_setup(self):
+        """🧪 Check that the Sonar Cloud configuration is in place"""
+        try:
+            response = urllib.request.urlopen("https://sonarcloud.io/dashboard?id={{cookiecutter.sonar_org}}_{{cookiecutter.directory_name}}")
+            self.assertEqual(response.getcode(), 
+            200, 
+            "❗️ Sonar Cloud is not set up correctly")
+        except urllib.error.HTTPError as e:
+            self.assertEqual(e.code, 
+            200, 
+            "❗️ There was aan error finding the Sonar project page")
+
+    def test_github_secrets(self):
+        """🧪 Check that Github secrets are correctly set"""
+
+        items=['SNYK_TOKEN', 'SONAR_TOKEN', 'PACT_BROKER_TOKEN']
+        is_found = {}
+        for item in items:
+            is_found[item] = False
+        with subprocess.Popen('gh secret list', stdout=subprocess.PIPE, shell=True, universal_newlines=True) as process:
+            for line in process.stdout:
+                for item in items:
+                    if item in line:
+                        is_found[item]=True
+                        break
+            self.assertTrue(all(is_found.values()), "❗️ There is at least one secret is missing")
 
     def tearDown(self):
         global has_errors

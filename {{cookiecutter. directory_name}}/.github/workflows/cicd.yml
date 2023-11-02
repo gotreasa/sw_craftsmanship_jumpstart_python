@@ -29,4 +29,9 @@ jobs:
     - name: 🤖 Tests - 🧪 Unit - 🔌 Integration - 👩🏻‍💻 E2E
       run: |
         pipenv run coverageAzureDevOps
+        
+    - uses: warchant/setup-sonar-scanner@master
     
+    - name: 🫣 Sonar Scanner
+      run: sonar-scanner
+        -Dsonar.login="${{ secrets.SONAR_TOKEN }}"

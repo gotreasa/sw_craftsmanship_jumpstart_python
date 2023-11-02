@@ -2,7 +2,17 @@
   "kata_name": "DummyKata",
   "directory_name": "{% now 'local', '%Y%m%d' %}_{{ cookiecutter.kata_name | slugify }}",
   "github_username": "undeadgrishnackh",
+  "sonar_org": "{{cookiecutter.github_username}}",
+  "_sonar_token": "",
   "_copy_without_render": [
     ".github/workflows/cicd.yml"
-  ]
+  ],
+  "__prompts__": {
+    "full_name": "Full Names of all Authors",
+    "kata_name": "Kata Name",
+    "directory_name": "Directory Name",
+    "description": "Project Description",
+    "github_username": "GitHub Username",
+    "sonar_org": "Sonar Organization ID",
+  }
 }
