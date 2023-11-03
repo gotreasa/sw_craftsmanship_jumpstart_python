@@ -234,6 +234,15 @@ class TestJumpstart(unittest.TestCase):
                         break
             self.assertTrue(all(is_found.values()), "❗️ There is at least one secret is missing")
 
+    def test_pre_commit_hooks_setup(self):
+        """🧪 Asserting that Pre-Commit hooks are set up"""
+        self.assertTrue(os.path.isfile('.git/hooks/commit-msg'), "❗️ commit-msg is missing")
+        self.assertTrue(os.access('.git/hooks/commit-msg', os.X_OK), "❗️ commit-msg is not executable")
+        self.assertTrue(os.path.isfile('.git/hooks/pre-commit'), "❗️ pre-commit is missing")
+        self.assertTrue(os.access('.git/hooks/pre-commit', os.X_OK), "❗️ pre-commit is not executable")
+        self.assertTrue(os.path.isfile('.git/hooks/pre-push'), "❗️ pre-push is missing")
+        self.assertTrue(os.access('.git/hooks/pre-push', os.X_OK), "❗️ pre-push is not executable")
+
     def tearDown(self):
         global has_errors
         if hasattr(self._outcome, 'errors'):

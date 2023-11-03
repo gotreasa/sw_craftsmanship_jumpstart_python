@@ -14,3 +14,13 @@ repos:
     hooks:
       - id: commitizen
         stages: [ commit-msg ]
+
+  - repo: local
+    hooks:
+      - id: pytest-cov
+        name: pytest
+        stages: [pre-push]
+        language: system
+        entry: pipenv run tests
+        types: [python]
+        pass_filenames: false
