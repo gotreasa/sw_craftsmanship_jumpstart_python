@@ -20,3 +20,9 @@ style = [
 
 [tool.black]
     line-length = 120
+
+[tool.poetry]
+name = "{{cookiecutter.kata_name}}"
+authors = ["Gearoid O'Treasaigh <gearoid9@gmail.com>"]
+description = "{{cookiecutter.kata_name}}"
+version = "0.0.0"

@@ -4,6 +4,7 @@
   "github_username": "undeadgrishnackh",
   "sonar_org": "{{cookiecutter.github_username}}",
   "_sonar_token": "",
+  "_snyk_token": "",
   "_copy_without_render": [
     ".github/workflows/cicd.yml"
   ],
@@ -13,6 +14,6 @@
     "directory_name": "Directory Name",
     "description": "Project Description",
     "github_username": "GitHub Username",
-    "sonar_org": "Sonar Organization ID",
+    "sonar_org": "Sonar Organization ID"
   }
 }
