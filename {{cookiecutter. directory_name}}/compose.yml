@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  dummy_app:
+    # --------------------------------------------------------------
+    # REMOTE IMAGE
+    # uncomment to pull from Docker Hub
+    # image: "undeadgrishnackh/dummy_app:latest"    # multi architecture ADO built
+    # stdin_open: true # docker run -i
+    # tty: true        # docker run -t
+    # --------------------------------------------------------------
+    # platform: linux/arm64
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    labels:
+      version: "1.0.0"
+      python.version: "3.9"
+      container.description: "Dummy App API Server with FastAPI"
+    container_name: "dummy_app"
+    ports:
+      - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: always
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000/health']
+      interval: 10s
+      timeout: 10m
+      retries: 5
+      start_period: 10s
