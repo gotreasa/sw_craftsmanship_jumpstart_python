@@ -18,8 +18,8 @@ PACT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 @pytest.fixture(scope="session")
 def pact():
-    pact = Consumer("dummy-consumer").has_pact_with(
-        Provider("dummy-provider"),
+    pact = Consumer("{{cookiecutter.directory_name}}_client").has_pact_with(
+        Provider("{{cookiecutter.directory_name}}_app"),
         host_name=PACT_MOCK_HOST,
         port=PACT_MOCK_PORT,
         pact_dir="./pacts",

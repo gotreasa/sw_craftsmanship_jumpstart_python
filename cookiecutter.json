@@ -8,7 +8,6 @@
   "_snyk_token": "",
   "_pact_broker_token": "",
   "_copy_without_render": [
-    ".github/workflows/cicd.yml"
   ],
   "__prompts__": {
     "full_name": "Full Names of all Authors",

@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  dummy_app:
+  api:
     # --------------------------------------------------------------
     # REMOTE IMAGE
     # uncomment to pull from Docker Hub
@@ -28,3 +28,23 @@ services:
       timeout: 10m
       retries: 5
       start_period: 10s
+
+  pact_verifier:
+    image: pactfoundation/pact-cli:latest
+    depends_on:
+      - api
+    environment:
+      - PACT_BROKER_BASE_URL
+      - PACT_BROKER_TOKEN
+      - PACT_BROKER_PUBLISH_VERIFICATION_RESULTS
+      - PACT_URL
+      - GIT_COMMIT
+      - GIT_BRANCH
+    command: >
+      verify
+      ${PACT_URL}
+      --provider-base-url http://api:8000
+      --provider {{cookiecutter.directory_name}}_app
+      --provider-app-version ${GIT_COMMIT}
+      --provider-version-tag ${GIT_BRANCH}
+      --wait 10

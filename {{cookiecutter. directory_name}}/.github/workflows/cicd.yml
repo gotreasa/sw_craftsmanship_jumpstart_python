@@ -8,12 +8,18 @@ on: [push]
 jobs:
   snyk_test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
 
     steps:
       - uses: actions/checkout@main
 
-      - name: 🐍 Set up Python ${{ matrix.python-version }}
+      - name: 🐍 Set up Python "{{ '${{ matrix.python-version }}' }}"
         uses: actions/setup-python@v3
+        with:
+          python-version: "{{ '${{ matrix.python-version }}' }}"
+          # cache: 'pipenv'
   
       - name: 👷‍ Install dependencies
         run: |
@@ -26,7 +32,7 @@ jobs:
           # In order to use the Snyk Action you will need to have a Snyk API token.
           # More details in https://github.com/snyk/actions#getting-your-snyk-token
           # or you can signup for free at https://snyk.io/login
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: "{{ '${{ secrets.SNYK_TOKEN}}' }}"
         with:
           command: test
           args: --all-projects --sarif-file-output=snyk.sarif -d
@@ -41,7 +47,7 @@ jobs:
           # In order to use the Snyk Action you will need to have a Snyk API token.
           # More details in https://github.com/snyk/actions#getting-your-snyk-token
           # or you can signup for free at https://snyk.io/login
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: "{{ '${{ secrets.SNYK_TOKEN}}' }}"
         with:
           command: code
           args: test --sarif-file-output=snyk-code.sarif
@@ -50,18 +56,52 @@ jobs:
         with:
           sarif_file: snyk-code.sarif
 
+
+  pact_tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@main
+
+      - name: 🐍 Set up Python "{{ '${{ matrix.python-version }}' }}"
+        uses: actions/setup-python@v3
+        with:
+          python-version: "{{ '${{ matrix.python-version }}' }}"
+          # cache: 'pipenv'
+  
+      - name: 👷‍ Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pipenv
+          pipenv install --deploy --dev
+
+      - name: Run pact tests
+        env:
+          GIT_COMMIT: "{{ '${{ github.sha }}' }}"
+          GIT_BRANCH: "{{ '${{ github.ref_name }}' }}"
+          PACT_BROKER_PUBLISH_VERIFICATION_RESULTS: true
+          PACT_BROKER_BASE_URL: "https://{{cookiecutter.pact_flow_username}}.pactflow.io"
+          PACT_BROKER_TOKEN: "{{ '${{ secrets.PACT_BROKER_TOKEN }}' }}"
+        run: make ci
+
+      
+
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.9", "3.10", "3.11"]
     steps:
     - uses: actions/checkout@v3
 
-    - name: 🐍 Set up Python ${{ matrix.python-version }}
+    - name: 🐍 Set up Python "{{ '${{ matrix.python-version }}' }}"
       uses: actions/setup-python@v3
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: "{{ '${{ matrix.python-version }}' }}"
+        # cache: 'pipenv'
 
     - name: 👷‍ Install dependencies
       run: |
@@ -81,4 +121,4 @@ jobs:
 
     - name: 🫣 Sonar Scanner
       run: sonar-scanner
-        -Dsonar.login="${{ secrets.SONAR_TOKEN }}"
+        -Dsonar.login="{{ '${{ secrets.SONAR_TOKEN }}' }}"
