@@ -13,11 +13,11 @@ RUN mkdir modules
 COPY Pipfile Pipfile.lock ./
 COPY modules /app/modules/
 
-RUN pip install --no-cache-dir pipenv && \
-    python -m pip install --upgrade pip && \
+RUN pip install --no-cache-dir --upgrade pipenv && \
+    python -m pip install --upgrade --no-cache-dir pip && \
     pipenv install --system --deploy && \
-    echo '#!/usr/bin/env bash' > /app/start_api_server && \
-    echo 'uvicorn modules.api.dummy_app:app --host ${HOST} --port ${PORT}' >> /app/start_api_server && \
+    echo "#!/usr/bin/env bash" > /app/start_api_server && \
+    echo "uvicorn modules.api.dummy_app:app --host ${HOST} --port ${PORT}" >> /app/start_api_server && \
     chmod 755 /app/start_api_server
 
 EXPOSE $PORT
