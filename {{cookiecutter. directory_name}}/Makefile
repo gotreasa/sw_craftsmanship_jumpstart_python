@@ -49,7 +49,7 @@ fake_ci_webhook:
 ## =====================
 
 test:
-	pipenv run tests
+	pipenv run ApiTests
 
 test_provider: .env
 		docker-compose up --abort-on-container-exit --exit-code-from pact_verifier
