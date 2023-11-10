@@ -181,3 +181,11 @@ jobs:
     - name: 🫣 Sonar Scanner
       run: sonar-scanner
         -Dsonar.login="{{ '${{ secrets.SONAR_TOKEN }}' }}"
+
+    - name: Publish Test Report
+      if: always() # Forces this step to always run
+      uses: mikepenz/action-junit-report@v3
+      with:
+        report_paths: 'junit/test-result.xml'
+        require_tests: true
+        check_name: PyTest Results
