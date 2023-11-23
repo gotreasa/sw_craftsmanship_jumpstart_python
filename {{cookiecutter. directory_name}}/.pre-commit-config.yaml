@@ -15,11 +15,10 @@ repos:
       - id: commitizen
         stages: [ commit-msg ]
 
-  - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.4.0
+  - repo: https://github.com/IBM/detect-secrets
+    rev: v0.13.1
     hooks:
       - id: detect-secrets
-        args: ['--baseline', '.secrets.baseline']
 
   - repo: local
     hooks:
