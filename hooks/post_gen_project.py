@@ -17,7 +17,7 @@ def run_command(command):
         command, cwd=PROJECT_DIRECTORY, shell=True, check=True, timeout=360
     )
     if completed_process.returncode != 0:
-        raise Exception(
+        raise EnvironmentError(
             f"Command {command} failed with return code {completed_process.returncode}"
         )
 
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     run_command("git init")
 
     print("🐍 Creating local quality gate with git hooks...")
-    run_command("pipenv run install_pre_hooks")
+    run_command("pipenv run installHooks")
 
     print("😻 Git add remote...")
     run_command(
