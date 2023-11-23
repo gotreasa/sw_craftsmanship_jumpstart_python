@@ -173,7 +173,7 @@ jobs:
 
     - name: 🤖 Tests - 🧪 Unit - 🔌 Integration - 👩🏻‍💻 E2E
       run: |
-        pipenv run coverageAzureDevOps
+        pipenv run coverageDevOps
 
     - name: 👷‍ Setup Sonar
       uses: warchant/setup-sonar-scanner@master
