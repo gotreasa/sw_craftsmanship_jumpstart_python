@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 commitizen = "*"
+detect-secrets = "*"
 pact-python = "*"
 pre-commit = "*"
 pylint = "*"
