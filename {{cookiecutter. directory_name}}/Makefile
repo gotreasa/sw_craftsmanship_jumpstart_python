@@ -38,7 +38,7 @@ publish_pacts: .env
 ## =====================
 
 test:
-	pipenv run ApiTests
+	pipenv run testApi
 
 test_provider: .env
 		docker-compose up --abort-on-container-exit --exit-code-from pact_verifier
