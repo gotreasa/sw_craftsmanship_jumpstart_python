@@ -1,4 +1,5 @@
-# Standard Library
+#!/usr/bin/env python
+# Standard Libraries only
 import re, sys, unittest, os, urllib.request
 
 
@@ -6,11 +7,9 @@ MODULE_REGEX = r"^[_a-zA-Z][_a-zA-Z0-9]+$"
 
 kata_name = "{{ cookiecutter.kata_name}}"
 
-kata_dir = "{{ cookiecutter.directory_name }}"
-
 if not re.match(MODULE_REGEX, kata_name):
     print(
-        f"ERROR: The project directory ({kata_name}) is not a valid Python module name. Please do not use a - and use _ instead"
+        f"ERROR: The name ({kata_name}) is not a valid Python module name. Please do not use a - and use _ instead"
     )
 
     # Exit to cancel project
