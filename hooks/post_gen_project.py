@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from cProfile import run
+# Standard Libraries only
 import os
 import subprocess
 import sys
@@ -54,7 +54,7 @@ def setup_sonar():
         urllib.request.urlopen(request)
 
     except urllib.error.HTTPError as error:
-            print("💥 There was an error", error)
+            print("💥 There was an error setting up Sonar", error)
             sys.exit(1)
     print("👌 Completed setting up the sonar configuration")
 
@@ -113,7 +113,7 @@ has_errors = False
 class TestJumpstart(unittest.TestCase):
     def test_docs_exist(self):
         """🧪 Asserting that documentation files exist"""
-        self.assertTrue(os.path.isfile('README.md'), "❗️ README.md is missing")
+        self.assertTrue(os.path.isfile('docs/README.md'), "❗️ README.md is missing")
         self.assertTrue(os.path.isfile('docs/NOTES.md'), "❗️ NOTES.md is missing")
         self.assertTrue(os.path.isfile('LICENSE'), "❗️ LICENSE is missing")
 
@@ -263,6 +263,7 @@ class TestJumpstart(unittest.TestCase):
             print('🧹 Removing the GitHub repository due to the failure')
             os.system("gh repo delete github.com/{{cookiecutter.github_username}}/{{cookiecutter.directory_name}} --yes")
             
+            print('🧹 Removing the SonarCloud project')
             headers = {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Authorization" : "Bearer {{cookiecutter._sonar_token}}"
