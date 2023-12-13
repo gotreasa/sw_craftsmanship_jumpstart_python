@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Standard Libraries only
-import re, sys, unittest, os, urllib.request
+import re, sys, unittest, urllib.request
 
 
 MODULE_REGEX = r"^[_a-zA-Z][_a-zA-Z0-9]+$"
@@ -16,7 +16,7 @@ if not re.match(MODULE_REGEX, kata_name):
     sys.exit(1)
 
 
-def assertNotEmpty(self, obj, message):
+def assert_not_empty(self, obj, message):
     self.assertTrue(obj, message)
 
 class TestInputIsValid(unittest.TestCase):
@@ -29,7 +29,7 @@ class TestInputIsValid(unittest.TestCase):
         for parameter in  cookie_parameters:
             with self.subTest(f"🧪 Check that {parameter[0]} is defined", parameter=parameter):
                 f"""🧪 Check that {parameter[0]} is defined"""
-                assertNotEmpty(self, parameter[1], f"❗️ The parameter {parameter[0]} does not have a value")
+                assert_not_empty(self, parameter[1], f"❗️ The parameter {parameter[0]} does not have a value")
 
     def test_repository_url_returns_missing(self):
         """🧪 Check that the Github repository is not already set up"""
